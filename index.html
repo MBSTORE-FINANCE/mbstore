@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101b2d">
+<meta name="description" content="MBSTORE - Kasir dan pembukuan toko pulsa offline">
+<link rel="manifest" href="manifest.webmanifest">
+<title>MBSTORE</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#152238;--muted:#718096;--navy:#101b2d;--green:#07966b;--line:#e7edf4;--red:#d94b55;--shadow:0 8px 24px #172b4d0c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:12px 15px;font-weight:650}.app{max-width:1050px;margin:auto;padding:16px 16px 90px}.top{background:linear-gradient(130deg,#101b2d,#1b3550);color:white;border-radius:22px;padding:20px;box-shadow:var(--shadow)}.brand{display:flex;justify-content:space-between;align-items:center}.brand h1{margin:0;font-size:24px;letter-spacing:1px}.brand small{color:#b8c7d8}.date{font-size:12px;color:#c5d1df;margin-top:5px}.balance{margin-top:24px}.balance label{font-size:12px;color:#c4d1df}.balance strong{display:block;font-size:30px;margin-top:4px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.stat,.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:var(--shadow)}.stat span{font-size:12px;color:var(--muted)}.stat b{display:block;font-size:19px;margin-top:7px}.green{color:var(--green)}.red{color:var(--red)}.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}.nav button{background:white;border:1px solid var(--line);color:var(--ink);padding:11px 4px;font-size:12px}.nav button.active{background:var(--navy);color:white}.nav .ico{display:block;font-size:19px;margin-bottom:4px}.section{display:none}.section.active{display:block}.heading{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 12px}.heading h2{font-size:18px;margin:0}.muted{color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.primary{background:var(--green);color:white}.secondary{background:#eaf1f7;color:#20334c}.danger{background:#fff0f0;color:var(--red)}.field{margin:12px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #dce5ef;border-radius:11px;background:white;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:var(--green)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.full{grid-column:1/-1}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:540px}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}.pill{font-size:11px;padding:4px 8px;border-radius:20px;background:#e9f8f2;color:var(--green)}.empty{text-align:center;padding:24px;color:var(--muted)}.reportgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reportgrid .stat{box-shadow:none}.notice{background:#fff8e8;border:1px solid #f2dfb6;color:#795a16;border-radius:12px;padding:12px;font-size:12px;line-height:1.5}.footer{text-align:center;color:var(--muted);font-size:11px;margin-top:25px}.hidden{display:none!important}
+@media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}.nav{grid-template-columns:repeat(8,1fr)}.app{padding-top:24px}.top{padding:26px}.balance strong{font-size:36px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand"><div><h1>MBSTORE</h1><small>SMART PULSA STORE MANAGEMENT</small></div><button class="secondary" id="installBtn" hidden>＋ Pasang</button></div>
+ <div class="date" id="today"></div>
+ <div class="balance"><label>SALDO KAS SAAT INI</label><strong id="cashBalance">Rp0</strong><small style="color:#c4d1df">Modal berjalan + laba/rugi bersih</small></div>
+</header>
+<div class="stats">
+ <div class="stat"><span>Omzet hari ini</span><b id="todaySales">Rp0</b></div>
+ <div class="stat"><span>Laba bersih hari ini</span><b class="green" id="todayProfit">Rp0</b></div>
+ <div class="stat"><span>Pengeluaran hari ini</span><b class="red" id="todayExpense">Rp0</b></div>
+ <div class="stat"><span>Total transaksi</span><b id="todayCount">0</b></div>
+</div>
+<nav class="nav" id="nav">
+ <button class="active" data-tab="home"><span class="ico">⌂</span>Ringkasan</button>
+ <button data-tab="sale"><span class="ico">＋</span>Penjualan</button>
+ <button data-tab="expense"><span class="ico">↗</span>Pengeluaran</button>
+ <button data-tab="capital"><span class="ico">◈</span>Modal</button>
+ <button data-tab="history"><span class="ico">▤</span>Riwayat</button>
+ <button data-tab="report"><span class="ico">▥</span>Laporan</button>
+ <button data-tab="backup"><span class="ico">⇧</span>Backup</button>
+ <button data-tab="settings"><span class="ico">⚙</span>Setelan</button>
+</nav>
+<section id="home" class="section active">
+ <div class="heading"><h2>Ringkasan keuangan</h2><span class="muted">Semua waktu lokal</span></div>
+ <div class="reportgrid">
+  <div class="stat"><span>Modal awal saat ini</span><b id="startCapital">Rp0</b></div>
+  <div class="stat"><span>Akumulasi laba penjualan</span><b class="green" id="grossProfit">Rp0</b></div>
+  <div class="stat"><span>Total biaya operasional</span><b class="red" id="allExpense">Rp0</b></div>
+  <div class="stat"><span>Modal akhir / nilai kas</span><b id="endCapital">Rp0</b></div>
+ </div>
+ <div class="panel" style="margin-top:12px"><div class="heading"><h2>Transaksi terbaru</h2><button class="secondary" data-go="history">Lihat semua</button></div><div id="recent"></div></div>
+ <p class="notice" style="margin-top:12px">Penting: keuntungan dihitung dari harga jual dikurangi harga modal produk. Pengeluaran operasional mengurangi laba bersih. Pastikan saldo kas awal benar dan lakukan backup secara berkala.</p>
+</section>
+<section id="sale" class="section">
+ <div class="heading"><h2>Catat penjualan</h2><span class="muted">Laba dihitung otomatis</span></div>
+ <div class="panel"><form id="saleForm"><div class="formgrid">
+  <div class="field"><label>Tanggal & waktu</label><input type="datetime-local" id="saleDate" required></div>
+  <div class="field"><label>Kategori</label><select id="saleCategory"><option>Pulsa</option><option>Paket Data</option><option>Token PLN</option><option>Top Up E-Wallet</option><option>Voucher Game</option><option>Aksesoris</option><option>Lainnya</option></select></div>
+  <div class="field full"><label>Nama produk / keterangan</label><input id="saleName" placeholder="Contoh: Pulsa Telkomsel 10.000" required></div>
+  <div class="field"><label>Harga modal (Rp)</label><input id="saleCost" type="number" min="0" step="1" placeholder="9000" required></div>
+  <div class="field"><label>Harga jual (Rp)</label><input id="salePrice" type="number" min="0" step="1" placeholder="12000" required></div>
+  <div class="field"><label>Jumlah</label><input id="saleQty" type="number" min="1" step="1" value="1" required></div>
+  <div class="field"><label>Metode pembayaran</label><select id="salePay"><option>Tunai</option><option>Transfer</option><option>QRIS</option><option>Saldo digital</option><option>Hutang pelanggan</option></select></div>
+  <div class="field full"><label>Catatan (opsional)</label><input id="saleNote" placeholder="Nomor pelanggan / catatan"></div>
+ </div><div class="notice">Estimasi laba transaksi: <b id="salePreview">Rp0</b></div><button class="primary" style="width:100%;margin-top:12px">Simpan penjualan</button></form></div>
+</section>
+<section id="expense" class="section">
+ <div class="heading"><h2>Catat pengeluaran</h2></div>
+ <div class="panel"><form id="expenseForm"><div class="formgrid">
+  <div class="field"><label>Tanggal & waktu</label><input type="datetime-local" id="expenseDate" required></div>
+  <div class="field"><label>Kategori</label><select id="expenseCategory"><option>Operasional</option><option>Listrik</option><option>Internet</option><option>Sewa</option><option>Transportasi</option><option>Perlengkapan</option><option>Biaya admin</option><option>Lainnya</option></select></div>
+  <div class="field full"><label>Keterangan</label><input id="expenseName" placeholder="Contoh: Bayar listrik toko" required></div>
+  <div class="field"><label>Nominal (Rp)</label><input id="expenseAmount" type="number" min="1" required></div>
+  <div class="field"><label>Metode</label><select id="expensePay"><option>Tunai</option><option>Transfer</option><option>QRIS</option></select></div>
+ </div><button class="primary" style="width:100%">Simpan pengeluaran</button></form></div>
+</section>
+<section id="capital" class="section">
+ <div class="heading"><h2>Pengaturan modal</h2></div>
+ <div class="panel">
+  <div class="field"><label>Modal awal / saldo awal kas (Rp)</label><input type="number" id="openingCapital" min="0"></div>
+  <button class="primary" id="saveCapital">Simpan modal awal</button>
+  <p class="muted">Mengubah modal awal akan menghitung ulang saldo sejak awal pembukuan. Gunakan penyesuaian modal untuk setoran atau penarikan setelahnya.</p>
+ </div>
+ <div class="panel" style="margin-top:12px"><h3>Tambah / tarik modal</h3><form id="capitalForm">
+  <div class="formgrid"><div class="field"><label>Jenis</label><select id="capitalType"><option value="in">Tambah modal</option><option value="out">Tarik modal pribadi</option></select></div><div class="field"><label>Nominal (Rp)</label><input type="number" id="capitalAmount" min="1" required></div><div class="field full"><label>Keterangan</label><input id="capitalNote" placeholder="Setoran modal / penarikan"></div></div>
+  <button class="primary" style="width:100%">Simpan perubahan modal</button>
+ </form></div>
+</section>
+<section id="history" class="section">
+ <div class="heading"><h2>Riwayat transaksi</h2><select id="historyFilter" style="max-width:150px;padding:9px;border:1px solid var(--line);border-radius:10px"><option value="all">Semua</option><option value="sale">Penjualan</option><option value="expense">Pengeluaran</option><option value="capital">Modal</option></select></div>
+ <div class="panel"><div class="tablewrap" id="historyTable"></div></div>
+</section>
+<section id="report" class="section">
+ <div class="heading"><h2>Laporan pembukuan</h2></div>
+ <div class="panel"><div class="formgrid"><div class="field"><label>Dari tanggal</label><input type="date" id="reportFrom"></div><div class="field"><label>Sampai tanggal</label><input type="date" id="reportTo"></div></div><button class="primary" id="runReport">Tampilkan laporan</button></div>
+ <div class="panel" style="margin-top:12px"><div id="reportResult"></div><button class="secondary" id="exportCsv" style="margin-top:12px">Ekspor laporan CSV</button></div>
+</section>
+<section id="backup" class="section">
+ <div class="heading"><h2>Backup & pemulihan</h2></div>
+ <div class="panel"><p>Data tersimpan di penyimpanan browser pada HP ini. Ekspor backup secara rutin agar data aman jika browser dihapus atau HP berganti.</p><button class="primary" id="backupBtn" style="width:100%">Unduh backup data</button><div class="field" style="margin-top:18px"><label>Pulihkan dari file backup JSON</label><input type="file" id="restoreFile" accept=".json,application/json"></div><button class="danger" id="clearData">Hapus seluruh data aplikasi</button></div>
+ <p class="notice" style="margin-top:12px">Jangan hapus data browser sebelum membuat backup. Mode offline tidak menyinkronkan data ke perangkat lain.</p>
+</section>
+<section id="settings" class="section">
+ <div class="heading"><h2>Pengaturan toko</h2></div>
+ <div class="panel"><div class="field"><label>Nama toko</label><input id="storeName" placeholder="MBSTORE"></div><button class="primary" id="saveSettings">Simpan pengaturan</button><p class="muted">Versi 1.0 • Penyimpanan lokal offline</p></div>
+</section>
+<div class="footer">MBSTORE • Pembukuan sederhana, keputusan lebih terarah.</div>
+</div>
+<script>
+const KEY='mbstore_data_v1';
+const money=n=>'Rp'+Math.round(Number(n)||0).toLocaleString('id-ID');
+const today=()=>new Date().toISOString().slice(0,10);
+const localDT=()=>{let d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};
+let data=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{opening:0,settings:{name:'MBSTORE'},tx:[]}}catch(e){return {opening:0,settings:{name:'MBSTORE'},tx:[]}}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function dateOf(t){return (t.date||'').slice(0,10)}
+function sums(list){let sales=list.filter(x=>x.type==='sale'),expenses=list.filter(x=>x.type==='expense'),caps=list.filter(x=>x.type==='capital');let revenue=sales.reduce((a,x)=>a+x.price*x.qty,0),cashRevenue=sales.filter(x=>x.pay!=='Hutang pelanggan').reduce((a,x)=>a+x.price*x.qty,0),cost=sales.reduce((a,x)=>a+x.cost*x.qty,0),gross=revenue-cost,expense=expenses.reduce((a,x)=>a+x.amount,0),capIn=caps.filter(x=>x.direction==='in').reduce((a,x)=>a+x.amount,0),capOut=caps.filter(x=>x.direction==='out').reduce((a,x)=>a+x.amount,0);return {revenue,cost,gross,expense,capIn,capOut,net:gross-expense,cash:data.opening+capIn-capOut+cashRevenue-cost-expense}}
+function txDate(t){return new Date(t.date).toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'})}
+function render(){
+ document.getElementById('today').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ document.getElementById('storeName').value=data.settings.name||'MBSTORE';document.querySelector('.brand h1').textContent=data.settings.name||'MBSTORE';
+ let d=today(),daily=data.tx.filter(t=>dateOf(t)===d),s=sums(daily),all=sums(data.tx);
+ document.getElementById('cashBalance').textContent=money(all.cash);
+ document.getElementById('todaySales').textContent=money(s.revenue);document.getElementById('todayProfit').textContent=money(s.gross-s.expense);document.getElementById('todayExpense').textContent=money(s.expense);document.getElementById('todayCount').textContent=daily.length;
+ document.getElementById('startCapital').textContent=money(data.opening);document.getElementById('grossProfit').textContent=money(all.gross);document.getElementById('allExpense').textContent=money(all.expense);document.getElementById('endCapital').textContent=money(all.cash);document.getElementById('openingCapital').value=data.opening;
+ let recent=[...data.tx].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);document.getElementById('recent').innerHTML=recent.length?recent.map(rowHTML).join(''):'<div class="empty">Belum ada transaksi. Mulai dengan mencatat penjualan.</div>';
+ renderHistory();runReport();
+}
+function rowHTML(t){let title=t.type==='sale'?t.name:t.type==='expense'?t.name:(t.direction==='in'?'Tambah modal':'Tarik modal');let amount=t.type==='sale'?t.price*t.qty:t.amount;let tag=t.type==='sale'?'Penjualan':t.type==='expense'?'Pengeluaran':'Modal';return `<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)"><div><b>${esc(title)}</b><div class="muted">${tag} • ${txDate(t)}</div></div><b class="${t.type==='expense'||(t.type==='capital'&&t.direction==='out')?'red':t.type==='sale'?'green':''}">${t.type==='expense'||(t.type==='capital'&&t.direction==='out')?'-':'+'}${money(amount)}</b></div>`}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderHistory(){let f=document.getElementById('historyFilter')?.value||'all';let list=[...data.tx].filter(t=>f==='all'||t.type===f).sort((a,b)=>b.date.localeCompare(a.date));document.getElementById('historyTable').innerHTML=list.length?`<table><thead><tr><th>Waktu</th><th>Jenis</th><th>Keterangan</th><th>Nominal</th><th></th></tr></thead><tbody>${list.map(t=>`<tr><td>${txDate(t)}</td><td>${t.type==='sale'?'Penjualan':t.type==='expense'?'Pengeluaran':'Modal'}</td><td>${esc(t.name||t.note||t.category||'')}</td><td>${money(t.type==='sale'?t.price*t.qty:t.amount)}</td><td><button class="danger" onclick="delTx('${t.id}')">Hapus</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Belum ada transaksi.</div>'}
+window.delTx=function(key){if(confirm('Hapus transaksi ini? Saldo dan laporan akan dihitung ulang.')){data.tx=data.tx.filter(t=>t.id!==key && !(t.type==='debt_payment'&&t.saleId===key));save()}}
+function setDateInputs(){document.getElementById('saleDate').value=localDT();document.getElementById('expenseDate').value=localDT();document.getElementById('reportFrom').value=today().slice(0,8)+'01';document.getElementById('reportTo').value=today()}
+function updatePreview(){let c=+saleCost.value||0,p=+salePrice.value||0,q=+saleQty.value||0;salePreview.textContent=money((p-c)*q)}
+['saleCost','salePrice','saleQty'].forEach(x=>document.getElementById(x).addEventListener('input',updatePreview));
+document.getElementById('saleForm').addEventListener('submit',e=>{e.preventDefault();let cost=+saleCost.value,price=+salePrice.value,qty=+saleQty.value;if(price<0||cost<0||qty<1)return alert('Periksa nominal transaksi.');data.tx.push({id:id(),type:'sale',date:saleDate.value||localDT(),category:saleCategory.value,name:saleName.value.trim(),cost,price,qty,pay:salePay.value,note:saleNote.value});e.target.reset();saleQty.value=1;saleDate.value=localDT();updatePreview();save();alert('Penjualan berhasil disimpan.')});
+document.getElementById('expenseForm').addEventListener('submit',e=>{e.preventDefault();data.tx.push({id:id(),type:'expense',date:expenseDate.value||localDT(),category:expenseCategory.value,name:expenseName.value.trim(),amount:+expenseAmount.value,pay:expensePay.value});e.target.reset();expenseDate.value=localDT();save();alert('Pengeluaran berhasil disimpan.')});
+document.getElementById('saveCapital').onclick=()=>{let v=+openingCapital.value;if(v<0)return alert('Modal tidak boleh negatif.');data.opening=v;save();alert('Modal awal diperbarui.')};
+document.getElementById('capitalForm').addEventListener('submit',e=>{e.preventDefault();data.tx.push({id:id(),type:'capital',date:localDT(),direction:capitalType.value,amount:+capitalAmount.value,note:capitalNote.value,name:capitalNote.value||'Penyesuaian modal'});e.target.reset();save();alert('Perubahan modal tersimpan.')});
+document.getElementById('historyFilter').onchange=renderHistory;
+document.getElementById('nav').addEventListener('click',e=>{let b=e.target.closest('button[data-tab]');if(!b)return;showTab(b.dataset.tab)});
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showTab(b.dataset.go));
+function showTab(id){document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));if(id==='history')renderHistory();if(id==='report')runReport()}
+function runReport(){let from=reportFrom.value||'0000-00-00',to=reportTo.value||'9999-99-99',list=data.tx.filter(t=>dateOf(t)>=from&&dateOf(t)<=to),s=sums(list);reportResult.innerHTML=`<div class="muted">Periode ${from} sampai ${to}</div><div class="reportgrid" style="margin-top:12px">${[['Omzet penjualan',s.revenue],['Modal barang terjual',s.cost],['Laba kotor',s.gross],['Pengeluaran',s.expense],['Laba bersih',s.net],['Setoran modal',s.capIn],['Penarikan modal',s.capOut],['Saldo kas akhir',sums(data.tx.filter(t=>dateOf(t)<=to)).cash]].map(([a,b])=>`<div class="stat"><span>${a}</span><b>${money(b)}</b></div>`).join('')}</div>`}
+document.getElementById('runReport').onclick=runReport;
+document.getElementById('exportCsv').onclick=()=>{let from=reportFrom.value,to=reportTo.value,list=data.tx.filter(t=>dateOf(t)>=from&&dateOf(t)<=to);let rows=[['Tanggal','Jenis','Kategori','Keterangan','Modal/unit','Jual/unit','Jumlah','Nominal','Laba kotor','Metode'],...list.map(t=>[t.date,t.type,t.category||'',t.name||t.note||'',t.cost||'',t.price||'',t.qty||'',t.type==='sale'?t.price*t.qty:t.amount,t.type==='sale'?(t.price-t.cost)*t.qty:'',t.pay||''])];download('mbstore-laporan.csv',rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'),'text/csv;charset=utf-8')};
+function download(name,content,type){let blob=new Blob([content],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+document.getElementById('backupBtn').onclick=()=>download('MBSTORE-backup-'+today()+'.json',JSON.stringify(data,null,2),'application/json');
+document.getElementById('restoreFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.tx)||typeof d.opening!=='number')throw Error();if(confirm('Pulihkan backup? Data saat ini akan diganti.')){data=d;save();alert('Backup berhasil dipulihkan.')}}catch(err){alert('File backup tidak valid.')}e.target.value=''};
+document.getElementById('clearData').onclick=()=>{if(confirm('Yakin menghapus SEMUA transaksi dan modal? Buat backup terlebih dahulu.')){data={opening:0,settings:{name:'MBSTORE'},tx:[]};save()}};
+document.getElementById('saveSettings').onclick=()=>{data.settings.name=storeName.value.trim()||'MBSTORE';save();alert('Pengaturan disimpan.')};
+let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false});installBtn.onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.hidden=true}else alert('Gunakan menu browser lalu pilih Tambahkan ke layar utama / Install app.')};
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+setDateInputs();render();updatePreview();
+</script>
+</body></html>

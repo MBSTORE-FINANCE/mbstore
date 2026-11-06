@@ -1,0 +1,28 @@
+MBSTORE — Aplikasi kasir & pembukuan offline (Versi 2.0)
+
+FITUR:
+- Dashboard saldo kas, omzet, laba, biaya.
+- Penjualan dan kalkulasi laba otomatis.
+- Katalog produk dengan harga modal/jual dan stok sederhana.
+- Stok katalog berkurang saat produk terpilih dijual (stok 0 berarti tidak dibatasi).
+- Pengeluaran, modal awal, setoran dan penarikan modal.
+- Piutang pelanggan dari penjualan dengan metode "Hutang pelanggan", termasuk pencatatan cicilan/pelunasan.
+- Laporan periode dan ekspor CSV.
+- Backup/pemulihan JSON.
+- PIN lokal opsional.
+
+CARA MEMASANG DI ANDROID:
+1. Unggah seluruh isi folder MBSTORE ke hosting statis yang mendukung HTTPS.
+2. Buka alamat HTTPS tersebut di Chrome Android saat internet tersedia sekali.
+3. Pilih menu Chrome (⋮) > Install app / Tambahkan ke layar utama.
+4. Buka MBSTORE. Setelah file aplikasi tercache, fitur pembukuan berjalan offline.
+
+CATATAN PENTING:
+- PWA/service worker memerlukan HTTPS (atau localhost); membuka file HTML langsung dari file manager tidak cukup untuk instalasi offline.
+- Data tersimpan di browser/perangkat menggunakan localStorage. Tidak ada sinkronisasi cloud.
+- Ekspor backup JSON secara berkala dan simpan di tempat aman.
+- PIN hanya pengunci sederhana di antarmuka, bukan enkripsi data. Jangan gunakan PIN bank.
+- Stok produk sederhana; stok 0 dianggap tidak dibatasi. Untuk produk digital seperti pulsa, stok fisik sering tidak relevan.
+- Rumus laba bersih: omzet penjualan - modal barang terjual - pengeluaran operasional.
+- Rumus saldo kas: modal awal + setoran modal - penarikan modal + penerimaan penjualan tunai/non-piutang + pelunasan piutang - modal barang terjual - pengeluaran.
+- Penjualan kredit tetap masuk omzet/laba saat dicatat; uangnya masuk saldo kas ketika pelunasan dicatat.

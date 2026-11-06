@@ -1,0 +1,9 @@
+{
+  "name": "MBSTORE - Kasir & Pembukuan Pulsa",
+  "short_name": "MBSTORE",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#101b2d",
+  "description": "Aplikasi kasir dan pembukuan toko pulsa offline"
+}
